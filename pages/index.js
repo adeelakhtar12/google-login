@@ -86,7 +86,7 @@ export default function Home() {
           <div>
             <h2>Welcome {name}</h2>
             <h2>Email: {email}</h2>
-            <img src={url} alt={name} />
+            {/* <Ima src={url} alt={name} /> */}
             <br />
             <GoogleLogout
               clientId="671348139606-906f7lcl8vk6l26hivc1ka0hk2teuvb1.apps.googleusercontent.com"
