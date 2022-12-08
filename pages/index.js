@@ -1,9 +1,25 @@
 
+import {useState} from 'react'
 import { useSession, signIn, signOut } from "next-auth/react";
+import { GoogleLogin, GoogleLogout } from "react-google-login";
 
 export default function Home() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [url, setUrl] = useState("");
+  const [loginStatus, setLoginStatus] = useState(false);
   const { data: session, status } = useSession();
-
+  const responseGoogle = response => {
+    console.log(response);
+    setName(response.profileObj.name);
+    setEmail(response.profileObj.email);
+    setUrl(response.profileObj.imageUrl);
+    setLoginStatus(true);
+  };
+  const logout = () => {
+    console.log("logout");
+    setLoginStatus(false);
+  };
   const popupCenter = (url, title) => {
     const dualScreenLeft = window.screenLeft ?? window.screenX;
     const dualScreenTop = window.screenTop ?? window.screenY;
@@ -31,31 +47,55 @@ export default function Home() {
     newWindow?.focus();
   };
 
-  if (status === "authenticated") {
-    return (
-      <div>
+  // if (status === "authenticated") {
+  //   return (
+  //     <div>
 
-        < h2 > Welcome {session.user.email} 😀</h2 >
-        <button onClick={() => signOut()}>Sign out</button>
-      </div>
-    )
-  }
-  else if (status === "unauthenticated") {
-    return (
+  //       < h2 > Welcome {session.user.email} 😀</h2 >
+  //       <button onClick={() => signOut()}>Sign out</button>
+  //     </div>
+  //   )
+  // }
+  // else if (status === "unauthenticated") {
+  //   return (
 
-      <div>
+  //     <div>
 
-        <h2>Please Login</h2>
-        <button onClick={() => popupCenter("/google-signin", "Sample Sign In")} >
-          Sign In with Google
-        </button>
-      </div>
-    )
-  }
+  //       <h2>Please Login</h2>
+  //       <button onClick={() => popupCenter("/google-signin", "Sample Sign In")} >
+  //         Sign In with Google
+  //       </button>
+  //     </div>
+  //   )
+  // }
 
   return (
     <div>
-      <h1>Loading...</h1>
+      <div className="App">
+        <h1>Login with Google</h1>
+        {!loginStatus && (
+          <GoogleLogin
+            clientId={process.env.GOOGLE_CLIENT_ID}
+            buttonText="Login"
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+            cookiePolicy={"single_host_origin"}
+          />
+        )}
+        {loginStatus && (
+          <div>
+            <h2>Welcome {name}</h2>
+            <h2>Email: {email}</h2>
+            <img src={url} alt={name} />
+            <br />
+            <GoogleLogout
+              clientId="671348139606-906f7lcl8vk6l26hivc1ka0hk2teuvb1.apps.googleusercontent.com"
+              buttonText="Logout"
+              onLogoutSuccess={logout}
+            />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

@@ -12,7 +12,9 @@
     "next": "12.3.0",
     "next-auth": "^4.10.3",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-google-login": "^5.2.2",
+    "surge": "^0.23.1"
   },
   "devDependencies": {
     "eslint": "8.23.1",
